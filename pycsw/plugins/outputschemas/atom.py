@@ -88,12 +88,27 @@ def write_record(result, esn, context, url=None):
             linkset = link.split(',')
 
             url2 = etree.SubElement(node, util.nspath_eval('atom:link', NAMESPACES), href=linkset[-1], type=linkset[2], title=linkset[1])
-            if linkset[2] == 'enclosure':
-                url2.attrib['rel'] = linkset[2]
-                url2.attrib['type'] = 'application/octet-stream'
+            #if linkset[2] == 'enclosure':
+            url2.attrib['rel'] = 'enclosure'
+            #url2.attrib['type'] = 'application/octet-stream'
+            url2.attrib['type'] = 'application/x-hdfeos'
 
-    etree.SubElement(node, util.nspath_eval('atom:link', NAMESPACES), href='%s?service=CSW&version=2.0.2&request=GetRepositoryItem&id=%s' % (url, util.getqattr(result, context.md_core_model['mappings']['pycsw:Identifier'])))
+    # the second displayed url: a link with dataset id
+    urlalter = etree.SubElement(node, util.nspath_eval('atom:link', NAMESPACES), href='%s?service=CSW&version=2.0.2&request=GetRepositoryItem&id=%s' % (url, util.getqattr(result, context.md_core_model['mappings']['pycsw:Identifier'])))
+    urlalter.attrib['rel'] = 'alternate'    
 
+    # dc:date
+    # temporal start and temporal end - follwing CWIC Opensearch Best Practice
+    val1 = util.getqattr(result, context.md_core_model['mappings']['pycsw:TempExtent_begin'])
+    val2 = util.getqattr(result, context.md_core_model['mappings']['pycsw:TempExtent_end'])
+    date = '/'
+    if val1:
+        date = val1 + date
+    if val2:
+        date = date + val2
+    if (date != '/'):
+        etree.SubElement(node, util.nspath_eval('dc:date', context.namespaces)).text = date
+    
     # atom:title
     el = etree.SubElement(node, util.nspath_eval(XPATH_MAPPINGS['pycsw:Title'], NAMESPACES))
     val = util.getqattr(result, context.md_core_model['mappings']['pycsw:Title'])

@@ -818,6 +818,11 @@ class Csw2(object):
         self.parent.kvp['maxrecords'], self.parent.kvp['startposition'])
 
         try:
+            # debug: manually add constraint
+            # constraint=self.parent.kvp['constraint']
+            #constraint['where'] = constraint['where'] + " AND records.parentidentifier = 'NRSCC_GLASS_BBE_MODIS_1KM'"
+            #constraint['where'] = "records.parentidentifier = 'NRSCC_GLASS_BBE_MODIS_1KM'"
+            
             matched, results = self.parent.repository.query(
             constraint=self.parent.kvp['constraint'],
             sortby=self.parent.kvp['sortby'], typenames=self.parent.kvp['typenames'],

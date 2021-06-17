@@ -290,6 +290,11 @@ class Repository(object):
                 else:  # aspatial sort
                     query = query.order_by(sortby_column)
 
+        LOGGER.debug('SQLAlchemy query')
+        from sqlalchemy.dialects import postgresql
+        q = self._get_repo_filter(query).limit(maxrecords).offset(startposition)
+        LOGGER.debug(str(q.statement.compile(dialect=postgresql.dialect())))
+    
         # always apply limit and offset
         return [str(total), self._get_repo_filter(query).limit(
         maxrecords).offset(startposition).all()]

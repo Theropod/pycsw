@@ -593,7 +593,7 @@ class Csw(object):
             LOGGER.info('OpenSearch mode detected; processing response.')
             self.response = self.opensearch().response_csw2opensearch(
                 self.response, self.config)
-
+            
         elif self.mode == 'oaipmh':
             LOGGER.info('OAI-PMH mode detected; processing response.')
             self.response = self.oaipmh().response(
