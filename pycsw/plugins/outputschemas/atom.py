@@ -86,14 +86,14 @@ def write_record(result, esn, context, url=None):
     if rlinks:
         for link in rlinks.split('^'):
             linkset = link.split(',')
-
+            # forcibly change the first displayed url attributes to 'rel=enclosure' and 'type=application/x-hdfeos' - follwing CWIC Opensearch Best Practice
             url2 = etree.SubElement(node, util.nspath_eval('atom:link', NAMESPACES), href=linkset[-1], type=linkset[2], title=linkset[1])
             #if linkset[2] == 'enclosure':
             url2.attrib['rel'] = 'enclosure'
             #url2.attrib['type'] = 'application/octet-stream'
             url2.attrib['type'] = 'application/x-hdfeos'
 
-    # the second displayed url: a link with dataset id
+    # the second displayed url: a link with dataset id - follwing CWIC Opensearch Best Practice
     urlalter = etree.SubElement(node, util.nspath_eval('atom:link', NAMESPACES), href='%s?service=CSW&version=2.0.2&request=GetRepositoryItem&id=%s' % (url, util.getqattr(result, context.md_core_model['mappings']['pycsw:Identifier'])))
     urlalter.attrib['rel'] = 'alternate'    
 
