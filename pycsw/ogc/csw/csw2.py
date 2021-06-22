@@ -742,29 +742,29 @@ class Csw2(object):
             if opensearch_geotime_filter != "":
                 LOGGER.debug(
                     'OpenSearch Geo/Time parameters to Filter: %s.', opensearch_geotime_filter)
-            # fill constraint if no constraint is set, or parse the filter xml to constraints in advance to prepare for merging with other input filters
-            if 'constraint' not in self.parent.kvp:
-                self.parent.kvp['constraint'] = opensearch_geotime_filter
-            else:
-                # kvp->filterxml->constraints
-                # parse the filter xml to constraints in advance to prepare for merging with other input filters
-                try:
-                    schema = os.path.join(self.parent.config.get('server', 'home'),
-                                          'core', 'schemas', 'ogc', 'filter', '1.1.0', 'filter.xsd')
-                    LOGGER.info(
-                        'Validating OpenSearch Geo/Time Filter %s', opensearch_geotime_filter)
-                    schema = etree.XMLSchema(file=schema)
-                    parser = etree.XMLParser(
-                        schema=schema, resolve_entities=False)
-                    opensearch_geotime_filter_doc = etree.fromstring(
-                        opensearch_geotime_filter, parser)
-                    LOGGER.debug('OpenSearch Geo/Time Filter is valid XML')
-                except Exception as err:
-                    errortext = \
-                        'Exception: document not valid.\nError: %s.' % str(err)
-                    LOGGER.exception(errortext)
-                    return self.exceptionreport('InvalidParameterValue',
-                                                'constraint', 'Invalid Filter query: %s' % errortext)
+                # fill constraint if no constraint is set, or parse the filter xml to constraints in advance to prepare for merging with other input filters
+                if 'constraint' not in self.parent.kvp:
+                    self.parent.kvp['constraint'] = opensearch_geotime_filter
+                else:
+                    # kvp->filterxml->constraints
+                    # parse the filter xml to constraints in advance to prepare for merging with other input filters
+                    try:
+                        schema = os.path.join(self.parent.config.get('server', 'home'),
+                                            'core', 'schemas', 'ogc', 'filter', '1.1.0', 'filter.xsd')
+                        LOGGER.info(
+                            'Validating OpenSearch Geo/Time Filter %s', opensearch_geotime_filter)
+                        schema = etree.XMLSchema(file=schema)
+                        parser = etree.XMLParser(
+                            schema=schema, resolve_entities=False)
+                        opensearch_geotime_filter_doc = etree.fromstring(
+                            opensearch_geotime_filter, parser)
+                        LOGGER.debug('OpenSearch Geo/Time Filter is valid XML')
+                    except Exception as err:
+                        errortext = \
+                            'Exception: document not valid.\nError: %s.' % str(err)
+                        LOGGER.exception(errortext)
+                        return self.exceptionreport('InvalidParameterValue',
+                                                    'constraint', 'Invalid Filter query: %s' % errortext)
         if self.parent.requesttype == 'GET':
             if 'constraint' in self.parent.kvp:
                 # GET request
